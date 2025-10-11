@@ -1,0 +1,41 @@
+<?php
+session_start();
+$title = 'Added';
+$user = $_SESSION['first_name'] ?? null;
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    require("connect_db.php");
+    $query = mysqli_prepare($link, "select * from products where item_id=?");
+    mysqli_stmt_bind_param($query, "s", $id);
+    mysqli_stmt_execute($query);
+    $r = mysqli_stmt_get_result($query);
+    if ($r->num_rows == 1) {
+        $item = mysqli_fetch_assoc($r);
+        // var_dump($item);
+        if (isset($_SESSION['cart'][$id]) && $_SESSION['cart'][$id]['quantity'] > 1) {
+            # Add one more of this product.
+            // $_SESSION['cart'][$id]['quantity']++;
+            require("includes/nav.php");
+?>
+            <div class="container py-3">
+                <div class="alert alert-secondary" role="alert">
+                    <p>Another <?= $item['item_name']; ?> has been added to your cart.</p>
+                    <a href="products.php" class="link link-secondary">Continue Shopping</a> | <a href="cart.php" class="link link-secondary">View Your Cart</a>
+                </div>
+            </div>
+        <?php
+        } else {
+            // $_SESSION['cart'][$id] = array('quantity' => 1, 'price' => $item['item_price']);
+            require("includes/nav.php");
+        ?>
+            <div class="container py-3">
+                <div class="alert alert-secondary" role="alert">
+                    <p>Item <?= $item['item_name']; ?> has been added to your cart.</p>
+                    <a href="products.php" class="link link-secondary">Continue Shopping</a> | <a href="cart.php" class="link link-secondary">View Your Cart</a>
+                </div>
+            </div>
+<?php
+        }
+    }
+}
+require("includes/footer.php");
