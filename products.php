@@ -7,6 +7,24 @@ if (!$user) {
     exit;
 }
 require('connect_db.php');
+if (isset($_POST['item_id'])) {
+    $id = $_POST['item_id'];
+    $query = mysqli_prepare($link, "select * from products where item_id=?");
+    mysqli_stmt_bind_param($query, "s", $id);
+    mysqli_stmt_execute($query);
+    $r = mysqli_stmt_get_result($query);
+    if ($r->num_rows == 1) {
+        $item = mysqli_fetch_assoc($r);
+        if (isset($_SESSION['cart'][$id])) {
+            # Add one more of this product.
+            $_SESSION['cart'][$id]['quantity']++;
+        } else {
+            $_SESSION['cart'][$id] = array('quantity' => 1, 'price' => $item['item_price']);
+        }
+        header("location: https://" . $_SERVER["HTTP_HOST"] . "/added.php?id=$id");
+        exit;
+    }
+}
 $query = "select * from products limit 18";
 $r = mysqli_query($link, $query);
 $rows = mysqli_fetch_all($r, MYSQLI_ASSOC);
@@ -53,10 +71,11 @@ require('includes/nav.php');
                         <span class="ms-2">(<?= $n_reviews; ?>)</span>
                     </div>
                     <div>
-                        <a href="added.php?id=<?= $row['item_id']; ?>" class="<?= $item_in_cart ? 'in-cart-button' : 'hero-button'; ?> btn btn-outline text-uppercase mt-4">Add to Cart</a>
-                        <!-- <form action="added.php?id=<?= $row['item_id']; ?>" method="GET">
-                            <button type="submit" class="<?= $item_in_cart ? 'in-cart-button' : 'hero-button'; ?> btn btn-outline text-uppercase mt-4"><?= $item_in_cart ? 'View Cart' : 'Add To Cart'; ?></button>
-                        </form> -->
+                        <!-- <a href="added.php?id=<?= $row['item_id']; ?>" class="<?= $item_in_cart ? 'in-cart-button' : 'hero-button'; ?> btn btn-outline text-uppercase mt-4">Add to Cart</a> -->
+                        <form action="" method="POST">
+                            <input type="hidden" name="item_id" value="<?= $row['item_id']; ?>">
+                            <button type="submit" class="<?= $item_in_cart ? 'in-cart-button' : 'hero-button'; ?> btn btn-outline text-uppercase mt-4">Add To Cart</button>
+                        </form>
                     </div>
                 </div>
             </div>
