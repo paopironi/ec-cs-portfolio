@@ -28,6 +28,7 @@ if (isset($_POST['item_id'])) {
 $query = "select * from products limit 18";
 $r = mysqli_query($link, $query);
 $rows = mysqli_fetch_all($r, MYSQLI_ASSOC);
+mysqli_close($link);
 $nprods = $r->num_rows;
 $table_rows = $nprods % 4 == 0 ? $nprods / 4 : floor($nprods / 4) + 1;
 require('includes/nav.php');
