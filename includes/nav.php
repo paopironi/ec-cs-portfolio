@@ -1,6 +1,13 @@
 <?php
+if (!isset($_SESSION)) {
+    session_start();
+}
 if (!isset($title)) {
     $title = 'Home';
+}
+if (isset($_SESSION['cart'])) {
+    $cart = $_SESSION['cart'];
+    $cart_count = array_reduce($cart, fn($acc, $item) => $acc + $item['quantity'], 0);
 }
 ?>
 <!DOCTYPE html>
@@ -31,22 +38,43 @@ if (!isset($title)) {
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link <?= $_SERVER['REQUEST_URI'] == '/' ? 'active' : ''; ?>" href="/">Products</a>
+                        <a class="nav-link <?= $_SERVER['REQUEST_URI'] == '/' ? 'active' : ''; ?>" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="about.html">Our Brand</a>
+                        <a class="nav-link <?= $_SERVER['REQUEST_URI'] == '/products.php' ? 'active' : ''; ?>" href="/products.php">Shop</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact Us</a>
+                        <a class="nav-link <?= $_SERVER['REQUEST_URI'] == '/about.php' ? 'active' : ''; ?>" aria-current="page" href="about.php">Our Brand</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= $_SERVER['REQUEST_URI'] == '/contact.php' ? 'active' : ''; ?>" href="contact.php">Contact Us</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.php">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="register.php">Register</a>
-                    </li>
+                    <?php if (!isset($user)) { ?>
+                        <li class="nav-item">
+                            <a class="nav-link <?= $_SERVER['REQUEST_URI'] == '/login.php' ? 'active' : ''; ?>" href="login.php">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?= $_SERVER['REQUEST_URI'] == '/register.php' ? 'active' : ''; ?>" href="register.php">Register</a>
+                        </li>
+                    <?php } ?>
+                    <?php if (isset($user)) { ?>
+                        <li class="nav-item">
+                            <span class="nav-link"><?= $user; ?></span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="logout.php">Logout</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="cart.php">
+                                <i class="bi bi-cart-fill"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link"><?= $cart_count ?? '0'; ?></span>
+                        </li>
+                    <?php } ?>
                 </ul>
             </div>
         </div>
