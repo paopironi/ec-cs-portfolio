@@ -64,8 +64,11 @@ if (isset($_SESSION['cart'])) {
                     <?php } ?>
                     <!-- Show name of the user, logout button and number of items in cart -->
                     <?php if (isset($user)) { ?>
-                        <li class="nav-item">
-                            <span class="nav-link"><?= $user; ?></span>
+                        <li class="nav-item dropdown">
+                            <span class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><?= $user; ?></span>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="orders.php">Orders</a>
+                            </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="logout.php">Logout</a>
