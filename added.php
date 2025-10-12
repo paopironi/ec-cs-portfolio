@@ -2,6 +2,10 @@
 session_start();
 $title = 'Added';
 $user = $_SESSION['first_name'] ?? null;
+if (!$user) {
+    header("location: https://" . $_SERVER["HTTP_HOST"] . "/login.php");
+    exit;
+}
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     require("connect_db.php");
@@ -37,5 +41,8 @@ if (isset($_GET['id'])) {
 <?php
         }
     }
+    mysqli_close($link);
+    require("includes/footer.php");
+} else {
+    die();
 }
-require("includes/footer.php");
