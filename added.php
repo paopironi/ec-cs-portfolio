@@ -6,6 +6,8 @@ if (!$user) {
     header("location: https://" . $_SERVER["HTTP_HOST"] . "/login.php");
     exit;
 }
+// This is the page shown after an item has been added to the cart.
+// The item is retrieved from the database in order to display its name.
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     require("connect_db.php");
@@ -15,10 +17,7 @@ if (isset($_GET['id'])) {
     $r = mysqli_stmt_get_result($query);
     if ($r->num_rows == 1) {
         $item = mysqli_fetch_assoc($r);
-        // var_dump($item);
         if (isset($_SESSION['cart'][$id]) && $_SESSION['cart'][$id]['quantity'] > 1) {
-            # Add one more of this product.
-            // $_SESSION['cart'][$id]['quantity']++;
             require("includes/nav.php");
 ?>
             <div class="container py-3">
@@ -29,7 +28,6 @@ if (isset($_GET['id'])) {
             </div>
         <?php
         } else {
-            // $_SESSION['cart'][$id] = array('quantity' => 1, 'price' => $item['item_price']);
             require("includes/nav.php");
         ?>
             <div class="container py-3">

@@ -1,12 +1,15 @@
 <?php
 session_start();
 $title = 'Shop';
+// Check if the user is logged in.
 $user = $_SESSION['first_name'] ?? null;
+// If the user is not logged in, redirect to the login page.
 if (!$user) {
     header("location: https://" . $_SERVER["HTTP_HOST"] . "/login.php");
     exit;
 }
 require('connect_db.php');
+// Add item to cart
 if (isset($_POST['item_id'])) {
     $id = $_POST['item_id'];
     $query = mysqli_prepare($link, "select * from products where item_id=?");
@@ -16,15 +19,18 @@ if (isset($_POST['item_id'])) {
     if ($r->num_rows == 1) {
         $item = mysqli_fetch_assoc($r);
         if (isset($_SESSION['cart'][$id])) {
-            # Add one more of this product.
+            //  Add one more of this product.
             $_SESSION['cart'][$id]['quantity']++;
         } else {
+            // Add a new product to the cart.
             $_SESSION['cart'][$id] = array('quantity' => 1, 'price' => $item['item_price']);
         }
+        // Redirect to a notification page
         header("location: https://" . $_SERVER["HTTP_HOST"] . "/added.php?id=$id");
         exit;
     }
 }
+// Retrieve all products from the database
 $query = "select * from products limit 18";
 $r = mysqli_query($link, $query);
 $rows = mysqli_fetch_all($r, MYSQLI_ASSOC);
@@ -39,13 +45,16 @@ require('includes/nav.php');
     <?php
     $n = 1;
     foreach ($rows as $row) {
+        // Check if an item is already in the cart, to display a different button.
         $item_in_cart = array_key_exists(
             $row['item_id'],
             $_SESSION['cart']
 
         );
+        // Generate random number of stars and reviews for each product.
         $n_stars = random_int(3, 5);
         $n_reviews = random_int(35, 105);
+        // Display 4 products per row.
         if ($n % 4 == 1) {
     ?>
             <div class="row mt-3 g-3">

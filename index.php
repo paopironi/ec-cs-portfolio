@@ -2,14 +2,15 @@
 session_start();
 $user = $_SESSION['first_name'] ?? null;
 require('connect_db.php');
-
+// For a regular GET request, retrieve all featured products.
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $query = "select * from products where item_is_featured=1";
     $r = mysqli_query($link, $query);
     $nprods = $r->num_rows;
     $table_rows = $nprods % 4 == 0 ? $nprods / 4 : floor($nprods / 4) + 1;
 };
-
+// If the HTTP method is POST, it means that a featured item has been added to the cart.
+// Only allow this if the user if logged in.
 if (isset($_POST['item_id'])) {
     if (!$user) {
         header("location: https://" . $_SERVER["HTTP_HOST"] . "/login.php");

@@ -6,10 +6,13 @@ if (!$user) {
     exit;
 }
 $title = 'Cart';
+// Update the cart items based on the POST request.
+// If the user has pressed the delete button next to an item, remove it from the cart.
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete-button'])) {
     $id = $_POST['item_id'];
     $_SESSION['cart'][$id]['quantity'] = 0;
     unset($_SESSION['cart'][$id]);
+// If the user has changed the quantity of one of more items, update them in the cart. 
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach ($_POST['item_id'] as $key => $id) {
         $_SESSION['cart'][$id]['quantity'] = (int) $_POST['quantity'][$key];
@@ -26,6 +29,7 @@ $nprods = count($_SESSION['cart']);
     if ($nprods == 0) {
         echo "<p>Your cart is empty. Continue <a href='products.php' class='link-secondary'>shopping</a>.";
     } else {
+        // Retrieve the items in the cart from the database.
         require("connect_db.php");
         $parameters = str_repeat('?, ', $nprods - 1) . '?';
         $ids = array_keys($_SESSION['cart']);
@@ -35,6 +39,7 @@ $nprods = count($_SESSION['cart']);
             $rows = mysqli_fetch_all($r, MYSQLI_ASSOC);
         }
     ?>
+    <!-- This form is used to delete items from the cart -->
         <form action="" method="POST" id="delete-from-cart"></form>
         <h3 class="text-uppercase">Your Cart</h3>
         <div class="">
@@ -49,6 +54,7 @@ $nprods = count($_SESSION['cart']);
                                 <th scope="col" style="width: 15%; text-align: right;"></th>
                             </tr>
                         </thead>
+                        <!-- This form is used to update the cart -->
                         <form action="" method="POST" id="cart-update">
                             <tbody>
                                 <?php
@@ -83,6 +89,7 @@ $nprods = count($_SESSION['cart']);
                         <button class="btn in-cart-button" type="submit" form="cart-update">Update Cart</button>
                     </div>
                 </div>
+                <!-- Calculate the cart total and diplay it under the cart content -->
                 <?php
                 $cart = $_SESSION['cart'];
                 $cart_total = array_reduce($cart, fn($acc, $ele) => $acc + $ele['quantity'] * $ele['price'], 0)
@@ -105,6 +112,7 @@ $nprods = count($_SESSION['cart']);
                         </tr>
                     </tbody>
                 </table>
+                <!-- This form is used to place the order -->
                 <div class="d-flex justify-content-end mt-2">
                     <form action="order.php" method="POST" id="cart-submit">
                         <button class="btn in-cart-button" type="submit" form="cart-submit">Place Order</button>

@@ -7,21 +7,23 @@ if (!$user) {
     header("location: https://" . $_SERVER["HTTP_HOST"] . "/login.php");
     exit;
 }
+// If the HTTP method is POST, it means that the user has placed an order.
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $user_id) {
     $cart = $_SESSION['cart'];
+    // Prepare quantities to be inserted into the database
     $items_total = array_reduce($cart, fn($acc, $ele) => $acc + $ele['quantity'], 0);
     $cart_total = array_reduce($cart, fn($acc, $ele) => $acc + $ele['quantity'] * $ele['price'], 0);
     $now = date('Y-m-d H:i:s');
 
     require("connect_db.php");
-
+    // Create a new order in the orders table
     $query = mysqli_prepare($link, "insert into orders (user_id, total, order_date) values (?, ?, ?)");
     mysqli_stmt_bind_param($query, "ids", $user_id, $cart_total, $now);
     $created = @mysqli_stmt_execute($query);
     if ($created) {
+        // Get the ID of the newly created order
         $created_order_id = mysqli_insert_id($link);
-        // echo $created_order_id;
-        // die();
+        // Insert the contents of the cart into the order_contents table and remove it from the cart
         foreach ($cart as $id => $item) {
             $query = mysqli_prepare($link, "insert into order_contents (order_id, item_id, quantity, price) values (?, ?, ?, ?)");
             mysqli_stmt_bind_param($query, "iiid", $created_order_id, $id, $item['quantity'], $item['price']);
@@ -37,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $user_id) {
     }
     require("includes/nav.php");
     mysqli_close($link);
+    // If there are not errors, display a success message and show a link to the orders page.
     if (!isset($ordering_error) && empty($item_insertion_error)) {
 ?>
         <div class="container py-3">

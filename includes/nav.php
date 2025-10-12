@@ -2,9 +2,11 @@
 if (!isset($_SESSION)) {
     session_start();
 }
+// Use a default title if one is not provided
 if (!isset($title)) {
     $title = 'Home';
 }
+// Count the number of items in the cart, to display on the nav bar if the user is logged in.
 if (isset($_SESSION['cart'])) {
     $cart = $_SESSION['cart'];
     $cart_count = array_reduce($cart, fn($acc, $item) => $acc + $item['quantity'], 0);
@@ -51,6 +53,7 @@ if (isset($_SESSION['cart'])) {
                     </li>
                 </ul>
                 <ul class="navbar-nav mb-2 mb-lg-0">
+                    <!-- Login and Register buttons -->
                     <?php if (!isset($user)) { ?>
                         <li class="nav-item">
                             <a class="nav-link <?= $_SERVER['REQUEST_URI'] == '/login.php' ? 'active' : ''; ?>" href="login.php">Login</a>
@@ -59,6 +62,7 @@ if (isset($_SESSION['cart'])) {
                             <a class="nav-link <?= $_SERVER['REQUEST_URI'] == '/register.php' ? 'active' : ''; ?>" href="register.php">Register</a>
                         </li>
                     <?php } ?>
+                    <!-- Show name of the user, logout button and number of items in cart -->
                     <?php if (isset($user)) { ?>
                         <li class="nav-item">
                             <span class="nav-link"><?= $user; ?></span>
