@@ -74,9 +74,9 @@ require('includes/nav.php');
             ?>
             <div class="col-lg-3 col-md-6 d-flex flex-column justify-content-between">
                 <div class="mt-3 text-center border border-secondary-subtle border-opacity-25 py-4">
-                    <img src="assets/<?= $row['item_img']; ?>" alt="<?= $row['item_name']; ?>" class="img-fluid">
+                    <img src="assets/<?= $row['item_img']; ?>" alt="<?= $row['item_name']; ?>" class="img-fluid" style="height: 150px;">
                 </div>
-                <div class="mt-3 px-5 px-md-4">
+                <div class=" mt-3 px-5 px-md-4">
                     <p class="fst-italic"><?= $row['item_name']; ?></p>
                     <p class="mt-3 fw-bold">£<?= $row['item_price']; ?></p>
                     <p class="feat-product-text lh-sm text-secondary"><?= $row['item_desc']; ?></p>
