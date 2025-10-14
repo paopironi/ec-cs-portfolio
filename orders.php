@@ -29,8 +29,8 @@ require('includes/nav.php');
             <thead>
                 <tr>
                     <th scope="col" style="width: 20%; text-align: left;">Order No.</th>
-                    <th scope="col" style="width: 40%; text-align: center;">Date</th>
-                    <th scope="col" style="width: 40%; text-align: right;">Total</th>
+                    <th scope="col" style="width: 50%; text-align: center;">Date</th>
+                    <th scope="col" style="width: 30%; text-align: right;">Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,8 +39,8 @@ require('includes/nav.php');
                 ?>
                     <tr>
                         <td style="width: 20%; text-align: left;"><?= $order['order_id'] ?></td>
-                        <td style="width: 40%; text-align: center;"><?= $order['order_date'] ?></td>
-                        <td style="width: 40%; text-align: right;">&pound;<?= number_format($order['total'], 2) ?></td>
+                        <td style="width: 50%; text-align: center;"><?= date_format(date_create($order['order_date']), 'D, jS F o') ?></td>
+                        <td style="width: 30%; text-align: right;">&pound;<?= number_format($order['total'], 2) ?></td>
                     </tr>
                 <?php
                 }
