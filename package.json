@@ -7,6 +7,7 @@
 	},
 	"type": "module",
 	"scripts": {
-		"db:reset": "node cypress/e2e/seed.js"
+		"db:reset": "node cypress/e2e/reset_all.js",
+		"db:reset:orders": "node cypress/e2e/reset_orders.js"
 	}
 }
