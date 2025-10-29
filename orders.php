@@ -47,7 +47,7 @@ require('includes/nav.php');
             $grouped_orders = group_by_order($rows);
 ?>
     <h3 class="text-uppercase">Your Orders</h3>
-    <div style="width: 768px;">
+    <div style="max-width: 768px;">
         <?php
             foreach ($grouped_orders as $key => $order) {
         ?>
