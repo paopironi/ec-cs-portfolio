@@ -1,8 +1,6 @@
 ## Repository for the CodeSpace Web Technologie's Porfolio Project
 
-A full-stack e-commerce website for the fictional watch retailer, MK TIME. The frontend uses Bootstrap 4 and custom CSS, while the backend is powered by PHP and MySQL. The application is deployed to a Linux VPS on DigitalOcean.
-
-[Live Demo](https://mktime.paolopironi.tech/).
+A full-stack e-commerce website for the fictional watch retailer, MK TIME. The frontend uses Bootstrap 4 and custom CSS, while the backend is powered by PHP and MySQL.
 
 Implemented Core Features:
 
